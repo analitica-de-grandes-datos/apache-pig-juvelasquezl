@@ -20,3 +20,14 @@ $ pig -x local -f pregunta.pig
 */
 
 
+u = LOAD 'data.csv' USING PigStorage(',') 
+    AS (id:int, 
+        firstname:CHARARRAY, 
+        surname:CHARARRAY, 
+        birthday:CHARARRAY, 
+        color:CHARARRAY, 
+        quantity:INT);
+
+W = FOREACH u GENERATE SUBSTRING(birthday, 5, 7);
+
+STORE W INTO 'output' USING PigStorage(',');

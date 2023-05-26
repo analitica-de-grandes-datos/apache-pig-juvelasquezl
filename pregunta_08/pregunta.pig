@@ -26,4 +26,4 @@ y = FOREACH u GENERATE FLATTEN(maleta), FLATTEN(diccionario);
 x = FOREACH y GENERATE $0 , $1; 
 z = GROUP x BY ($0,$1); 
 f = FOREACH z GENERATE $0 , COUNT($1); 
-store f into 'output';
+store f into 'output' USING PigStorage(',');

@@ -22,4 +22,4 @@ y = FOREACH u GENERATE FLATTEN(maleta) AS Letrica;
 x = GROUP y BY Letrica;
 f = FOREACH x GENERATE $0, COUNT($1);
  
-store f INTO 'output';
+store f INTO 'output' USING PigStorage(',');

@@ -34,3 +34,26 @@ $ pig -x local -f pregunta.pig
         >>> Escriba su respuesta a partir de este punto <<<
 */
 
+u = LOAD 'data.csv' USING PigStorage(',') 
+    AS (id:int, 
+        firstname:CHARARRAY, 
+        surname:CHARARRAY, 
+        birthday:CHARARRAY, 
+        color:CHARARRAY, 
+        quantity:INT);
+W = FOREACH u GENERATE birthday, (CASE GetMonth(ToDate(birthday))
+                              WHEN 1 THEN 'ene' 
+                              WHEN 2 THEN 'feb'
+                              WHEN 3 THEN 'mar'
+                              WHEN 4 THEN 'abr'
+                              WHEN 5 THEN 'may'
+                              WHEN 6 THEN 'jun'
+                              WHEN 7 THEN 'jul'
+                              WHEN 8 THEN 'ago'
+                              WHEN 9 THEN 'sep'
+                              WHEN 10 THEN 'oct'
+                              WHEN 11 THEN 'nov'
+                              ELSE 'dic' END), SPRINTF('%02d',GetMonth(ToDate(birthday))), GetMonth(ToDate(birthday));
+
+
+STORE W INTO 'output' USING PigStorage(',');

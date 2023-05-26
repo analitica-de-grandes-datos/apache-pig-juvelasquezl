@@ -20,3 +20,17 @@ $ pig -x local -f pregunta.pig
 
 */
 
+u = LOAD 'data.csv' USING PigStorage(',') 
+    AS (id:int, 
+        firstname:CHARARRAY, 
+        surname:CHARARRAY, 
+        birthday:CHARARRAY, 
+        color:CHARARRAY, 
+        quantity:INT);
+--
+-- >>> Escriba su respuesta a partir de este punto <<<
+--
+W = FOREACH u GENERATE color;
+ 
+ord = FILTER W BY NOT(color matches '^[b].*'); 
+STORE ord INTO 'output' USING PigStorage(',');
