@@ -34,3 +34,30 @@ $ pig -x local -f pregunta.pig
         >>> Escriba su respuesta a partir de este punto <<<
 */
 
+u = LOAD 'data.csv' USING PigStorage(',') 
+    AS (id:int, 
+        firstname:CHARARRAY, 
+        surname:CHARARRAY, 
+        birthday:CHARARRAY, 
+        color:CHARARRAY, 
+        quantity:INT);
+
+resultado = FOREACH u GENERATE birthday, SPRINTF('%02d',GetDay(ToDate(birthday))), GetDay(ToDate(birthday)),
+                        (CASE ToString(ToDate(birthday, 'yyyy-MM-dd'), 'EEE')
+                            WHEN 'Mon' THEN 'lun' 
+                            WHEN 'Tue' THEN 'mar'
+                            WHEN 'Wed' THEN 'mie'
+                            WHEN 'Thu' THEN 'jue'
+                            WHEN 'Fri' THEN 'vie'
+                            WHEN 'Sat' THEN 'sab'
+                            ELSE 'dom' END),
+                        (CASE ToString(ToDate(birthday, 'yyyy-MM-dd'), 'EEE')
+                            WHEN 'Mon' THEN 'lunes' 
+                            WHEN 'Tue' THEN 'martes'
+                            WHEN 'Wed' THEN 'miercoles'
+                            WHEN 'Thu' THEN 'jueves'
+                            WHEN 'Fri' THEN 'viernes'
+                            WHEN 'Sat' THEN 'sabado'
+                            ELSE 'domingo' END);    
+                            
+STORE resultado INTO 'output' USING PigStorage(',');
